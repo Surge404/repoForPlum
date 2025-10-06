@@ -1,177 +1,332 @@
-This is the revised and beautifully formatted `README.md` for your AI-Powered Benefits Discovery Flow application, following your requested structure and design elements.
+# AI-Powered Benefits Discovery Flow
 
-````markdown
-# 💡 AI-Powered Benefits Discovery Flow
+A beautiful, interactive React web application that uses AI to help users discover and understand their benefits. Built with React, Tailwind CSS, Recoil, Framer Motion, and Google Gemini AI.
 
-An intelligent, interactive web application that leverages **Google Gemini AI** to help users instantly discover and understand their health and wellness benefits. Built with a modern, non-traditional UI and stunning animations for an engaging user experience.
+## Features
 
-<img src="https://via.placeholder.com/800x400.png?text=Screenshot+of+Input+Screen+with+Glassmorphism+and+Gradient+Background" alt="Conceptual screenshot of the AI-Powered Benefits Discovery Flow application's input screen with a glassmorphism card over a vibrant gradient background."/>
+- **Intelligent Classification**: AI-powered text analysis to categorize user queries into Dental, OPD, Vision, or Mental Health benefits
+- **Dynamic Benefit Matching**: Automatically matches user needs with relevant benefits
+- **Personalized Action Plans**: AI-generated 3-step action plans for each benefit
+- **Stunning Animations**: Smooth transitions, floating elements, and engaging micro-interactions using Framer Motion
+- **Dark Mode**: Seamless dark/light theme toggle with beautiful gradients
+- **Responsive Design**: Fully responsive layout that works on all devices
+- **Modern UI/UX**: Creative, non-traditional design with glassmorphism effects and gradient backgrounds
 
----
+## Tech Stack
 
-## 1. Project Setup & Demo
+- **React 18** - UI framework
+- **Tailwind CSS** - Utility-first styling
+- **Recoil** - State management
+- **Framer Motion** - Advanced animations
+- **Google Gemini AI** - AI classification and generation
+- **Vite** - Build tool and dev server
+- **Lucide React** - Beautiful icons
 
-### Tech Stack Highlights
+## Quick Start
 
-| Area | Technology | Purpose |
-| :--- | :--- | :--- |
-| **UI Framework** | **React 18** | High-performance user interface |
-| **Styling** | **Tailwind CSS** | Utility-first, rapid styling |
-| **State** | **Recoil** | Efficient, modern state management |
-| **Animation** | **Framer Motion** | Smooth, dynamic UI transitions |
-| **AI** | **Google Gemini AI** | Classification and content generation |
+### Prerequisites
 
-### Quick Start
+- Node.js 16+ and npm
 
-**Prerequisites**: Node.js 16+ and npm
+### Installation & Running
 
 ```bash
-# Clone the repository (if not already done)
-# git clone <your-repo-link>
-# cd <repo-folder>
-
 # Install dependencies
 npm install
 
 # Start development server
 npm start
-# App will be available at http://localhost:5173
-````
 
-### 🚀 Demo
+# Build for production
+npm run build
 
-A hosted demo or screen recording showcasing the full flow is available:
+# Preview production build
+npm run preview
+```
 
-  - **Web Demo**: [Link to your hosted application]
-  - **Screen Recording**: [Link to your screen recording]
+The app will be available at `http://localhost:5173`
 
------
-
-## 2\. Problem Understanding
-
-The core problem this application solves is **user confusion and friction in benefits utilization**. Employees often have comprehensive benefit packages but struggle to:
-
-1.  **Determine Relevancy**: Which benefit applies to their specific need (e.g., is "back pain" an OPD or a Mental Health issue)?
-2.  **Understand Next Steps**: What is the exact process to *use* the benefit (e.g., whom to call, what documents are needed)?
-
-**Assumptions Made:**
-
-  * **Fixed Categories**: The AI classification is limited to the four defined categories: **Dental, OPD, Vision, and Mental Health**.
-  * **Client-Side Data**: Benefit details are served from a static mock JSON file (`benefits.mock.json`), implying the system currently has no live backend for benefit management.
-  * **API Key Management**: For this demonstration, the Gemini API key is stored client-side in `aiService.js`. **In a production environment, all API calls must be proxied through a secure backend.**
-
------
-
-## 3\. AI Prompts & Iterations
-
-The application uses **Google Gemini AI** for three distinct and critical tasks. The prompts are aggressively engineered to force a predictable, structured output for reliable client-side processing.
-
-### Task 1: Intelligent Classification
-
-**Goal**: Pinpoint the benefit category from ambiguous user text.
-**Key Constraint**: Must return **ONLY** the category name to simplify matching with mock data.
-
-| Prompt Type | Initial Prompt Draft | Refined Prompt Used |
-| :--- | :--- | :--- |
-| **Classification** | "What category is this: {user\_input}? Choose from Dental, OPD, Vision, Mental Health." | **"Return ONLY one of these category names — Dental, OPD, Vision, Mental Health — that best matches the user text. Output exactly the category name and nothing else. If the text is ambiguous or none match, output 'UNRECOGNIZED'."** |
-
-### Task 2: Clarification Question
-
-**Goal**: Get necessary information when the initial classification fails (`UNRECOGNIZED`).
-**Key Constraint**: Must return **ONLY** a single, concise question.
-
-| Prompt Type | Initial Prompt Draft | Refined Prompt Used |
-| :--- | :--- | :--- |
-| **Clarification** | "The user needs more help. Ask them a question about {user\_input} to get to Dental, OPD, Vision, or Mental Health." | **"The user wrote: '{user\_input}'. Ask a single concise clarifying question that will help classify this into Dental, OPD, Vision, or Mental Health. Return ONLY the clarifying question sentence."** |
-
-### Task 3: Personalized Action Plan Generation
-
-**Goal**: Create a structured, easy-to-follow 3-step plan for the selected benefit.
-**Key Constraint**: Must return **STRICT JSON** matching the defined schema for safe parsing.
-
-| Prompt Type | Initial Prompt Draft | Refined Prompt Used |
-| :--- | :--- | :--- |
-| **Action Plan** | "Generate 3 steps to use this benefit: {benefit} for this problem: {user\_input}. Include required documents and time." | **(See full prompt in code for the complex JSON template)** |
-
-> The final Action Plan prompt includes the entire JSON schema as part of the instruction to guarantee the exact structure required by the client-side code (`BenefitDetails.jsx`).
-
------
-
-## 4\. Architecture & Code Structure
-
-The application follows a clean, component-based, and modular React architecture.
-
-### Directory Structure
+## Project Structure
 
 ```
 src/
-├── components/           # Reusable UI components (Input, Cards, Details)
-│   ├── BenefitInput.jsx      # Initial input screen
-│   ├── ProcessingScreen.jsx  # Loading/classification screen
-│   └── BenefitDetails.jsx    # Benefit details & action plan view
+├── components/          # React components
+│   ├── BenefitInput.jsx       # Initial input screen
+│   ├── ProcessingScreen.jsx   # Loading/classification screen
+│   ├── BenefitList.jsx        # Benefits listing screen
+│   ├── BenefitCard.jsx        # Individual benefit card
+│   └── BenefitDetails.jsx     # Benefit details & action plan
 ├── data/
-│   └── **benefits.mock.json** # Static benefit data source
+│   └── benefits.mock.json     # Mock benefits data
 ├── services/
-│   └── **aiService.js** # Single point of contact for all Gemini API calls
+│   └── aiService.js           # AI integration service
 ├── state/
-│   └── **atoms.js** # Central Recoil state definitions
-├── **App.jsx** # Main application component & screen router
-└── main.jsx
+│   └── atoms.js               # Recoil state management
+├── App.jsx                    # Main app component
+├── main.jsx                   # App entry point
+└── index.css                  # Global styles & animations
 ```
 
-### State Management (`state/atoms.js`)
+## AI Integration
 
-**Recoil** is used for global state to efficiently manage the flow:
+This app uses **Google Gemini AI** for intelligent text processing. The AI handles three main tasks:
 
-  * `userInputState`: Stores the user's initial query.
-  * `classificationState`: Stores the AI's category result (`Dental`, `OPD`, etc.).
-  * `actionPlanState`: Stores the complex JSON object generated by the AI for the action plan.
-  * `currentScreenState`: Manages the application flow (Input -\> Processing -\> Benefits -\> Details).
+### 1. Classification Prompt
 
-### AI Integration (`services/aiService.js`)
-
-This file abstracts the API interaction, containing helper functions that construct the three specific prompts (Classification, Clarification, Action Plan) and handle the API request/response. This separation keeps components clean and focused on UI logic.
-
------
-
-## 5\. Screenshots / Screen Recording
-
-| Screen | Description |
-| :--- | :--- |
-| **Input Screen** | Creative UI with floating elements, Dark Mode toggle, and a clear call-to-action for the user query. |
-| **Processing Screen** | Engaging loading state with Framer Motion animations (rotating rings, pulsing icon) to mask AI latency. |
-| **Benefits List** | Dynamically filtered benefit cards with coverage badges and category tags based on AI classification. |
-| **Benefit Details** | Full benefit overview alongside the structured, 3-step AI-generated action plan, using collapsable sections for clarity. |
-
-> 
-
------
-
-## 6\. Known Issues / Improvements
-
-### Known Issues
-
-  * **AI Format Drift**: The Gemini API occasionally deviates slightly from the strict JSON structure for the Action Plan, requiring robust client-side error handling/parsing.
-  * **No Persistence**: Dark mode preference and any past user inputs are not saved across sessions (no local storage integration).
-  * **Rate Limiting**: There is no built-in API rate-limiting or retry logic, which would be necessary for production stability.
-
-### Future Improvements
-
-1.  **Backend & Persistence**: Introduce a backend (e.g., Firebase, Express) for user authentication, secure API key storage, and persistence of user history/action plans.
-2.  **Multi-Turn Conversation**: Implement a memory-aware chat flow for the AI to handle follow-up questions *after* a benefit is selected, enhancing personalized guidance.
-3.  **Accessibility (A11Y)**: Enhance keyboard navigation and add ARIA Live Regions to dynamically announce status changes on the `ProcessingScreen`.
-
------
-
-## 7\. Bonus Work
-
-The project includes significant polish and enhancements to create a visually appealing and engaging user experience:
-
-✨ **Stunning Animations**: Extensive use of **Framer Motion** for all screen transitions, floating elements (e.g., background blobs), and interactive micro-interactions (e.g., card hover effects).
-
-🌙 **Seamless Dark Mode**: Full support for a dark theme with beautifully contrasting gradients and glassmorphism effects, managed efficiently via a **Recoil** state atom.
-
-🎨 **Modern UI/UX**: The design employs a creative, non-traditional aesthetic featuring **Glassmorphism** cards, custom gradient backgrounds, and sleek typography from Tailwind CSS, resulting in a unique, premium feel.
+Classifies user input into one of four benefit categories:
 
 ```
+Return ONLY one of these category names — Dental, OPD, Vision, Mental Health — that best matches the user text. Output exactly the category name and nothing else. If the text is ambiguous or none match, output "UNRECOGNIZED".
+
+User text: "{user_input}"
 ```
+
+**Expected Output**: `Dental` | `OPD` | `Vision` | `Mental Health` | `UNRECOGNIZED`
+
+### 2. Clarification Prompt
+
+Used when classification is ambiguous:
+
+```
+The user wrote: "{user_input}". Ask a single concise clarifying question that will help classify this into Dental, OPD, Vision, or Mental Health. Return ONLY the clarifying question sentence.
+```
+
+**Expected Output**: A single clarifying question string
+
+### 3. Action Plan Prompt
+
+Generates a structured 3-step action plan:
+
+```
+Given:
+
+selectedBenefit: {
+  title: "{benefit.title}",
+  coverage: {benefit.coverage}%,
+  description: "{benefit.description}"
+}
+user_input: "{user_input}"
+
+Return a JSON object exactly in this shape (no extra text):
+{
+  "steps": [
+    {
+      "step": 1,
+      "title": "Short title (max 6 words)",
+      "description": "Action description (1-2 sentences).",
+      "estimatedTime": "e.g. 1-2 days or 1 hour",
+      "requiredDocs": ["list","of","docs"]
+    },
+    {
+      "step": 2,
+      "title": "...",
+      "description": "...",
+      "estimatedTime": "...",
+      "requiredDocs": [...]
+    },
+    {
+      "step": 3,
+      "title": "...",
+      "description": "...",
+      "estimatedTime": "...",
+      "requiredDocs": [...]
+    }
+  ],
+  "notes": "One-sentence extra note if needed, otherwise empty string"
+}
+```
+
+**Expected Output**: Strict JSON object with steps array and notes
+
+## API Configuration
+
+The Gemini API key is configured in `src/services/aiService.js`:
+
+```javascript
+const GEMINI_API_KEY = 'AIzaSyDuMnKNw3dqnURwgBWOx8Gs0UgVx9qdM64';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+```
+
+To use your own API key:
+
+1. Get an API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Replace the `GEMINI_API_KEY` value in `src/services/aiService.js`
+
+## User Flow
+
+1. **Input Screen**: User enters their health concern (e.g., "I have tooth pain, what can I do?")
+2. **Processing Screen**: Beautiful loading animation while AI classifies the request
+3. **Benefits List**: 2-6 relevant benefit cards displayed based on classification
+4. **Benefit Details**: User selects a benefit to view AI-generated 3-step action plan
+
+### Features in Each Screen
+
+**Input Screen**:
+- Free-text input with friendly placeholder
+- Example queries for quick testing
+- Animated gradient background
+- Feature highlights
+
+**Processing Screen**:
+- Animated rotating rings
+- Pulsing brain icon
+- Orbiting sparkles
+- Status indicators
+- User query display
+
+**Benefits List**:
+- Animated benefit cards with hover effects
+- Coverage percentage badges
+- Category tags
+- Regenerate functionality
+- Back navigation
+
+**Benefit Details**:
+- Full benefit overview
+- AI-generated 3-step action plan
+- Expandable steps with required documents
+- Time estimates for each step
+- Additional notes
+- Regenerate action plan option
+
+## Mock Data
+
+The app includes 6 mock benefits across 4 categories:
+
+- **Dental**: Cleaning & Checkup (80%), Tooth Extraction (70%), Root Canal (65%)
+- **Mental Health**: Counseling (90%)
+- **Vision**: Eye Exam (50%)
+- **OPD**: General Consultation (75%)
+
+Benefits are stored in `src/data/benefits.mock.json` and can be easily modified.
+
+## State Management
+
+The app uses Recoil for state management with the following atoms:
+
+- `userInputState` - Current user input
+- `classificationState` - AI classification result
+- `selectedBenefitState` - Currently selected benefit
+- `actionPlanState` - Generated action plan
+- `currentScreenState` - Active screen (input/processing/benefits/details)
+- `darkModeState` - Dark mode toggle
+- `isClassifyingState` - Loading state for classification
+- `isGeneratingPlanState` - Loading state for action plan generation
+
+## Customization
+
+### Adding New Benefits
+
+Edit `src/data/benefits.mock.json`:
+
+```json
+{
+  "id": "unique-id",
+  "category": "Dental|OPD|Vision|Mental Health",
+  "title": "Benefit Title",
+  "coverage": 80,
+  "description": "Benefit description",
+  "icon": "🦷",
+  "color": "from-cyan-500 to-blue-600"
+}
+```
+
+### Changing Colors
+
+All gradients use Tailwind CSS classes. Update the `color` field in benefits or modify component gradient classes.
+
+### Modifying Animations
+
+Animations are defined in components using Framer Motion. Key animation files:
+- `src/components/BenefitInput.jsx` - Floating background blobs
+- `src/components/ProcessingScreen.jsx` - Rotating rings and orbiting elements
+- `src/components/BenefitCard.jsx` - Card hover effects
+- `src/index.css` - Custom CSS animations
+
+## Assumptions & Limitations
+
+- The app currently uses a real AI API (Google Gemini) but includes mock benefits data
+- No backend or database - all data is client-side
+- No user authentication
+- No benefit claiming/application process
+- Classification is limited to 4 predefined categories
+- Action plans are AI-generated and may vary in quality
+
+## Known Issues
+
+- AI responses may occasionally not follow exact format (handled with error catching)
+- No retry limit on API calls
+- Dark mode preference not persisted across sessions
+- No analytics or usage tracking
+
+## Next Steps & Future Enhancements
+
+1. **Backend Integration**:
+   - User authentication
+   - Benefit application workflow
+   - Save user history and action plans
+
+2. **Enhanced AI**:
+   - Multi-turn conversations
+   - Context-aware follow-up questions
+   - Learning from user feedback
+
+3. **Extended Features**:
+   - Calendar integration for appointments
+   - Document upload and management
+   - Provider search and directory
+   - Cost estimation tools
+   - Claims tracking
+
+4. **Accessibility**:
+   - Screen reader optimization
+   - Keyboard navigation improvements
+   - ARIA labels enhancement
+   - High contrast mode
+
+5. **Performance**:
+   - Code splitting
+   - Image optimization
+   - Caching strategies
+   - Progressive Web App (PWA)
+
+## Testing
+
+To test the AI classification, try these queries:
+
+- **Dental**: "I have tooth pain", "Need dental cleaning", "Cavity treatment"
+- **Vision**: "Blurry vision", "Need glasses", "Eye exam"
+- **Mental Health**: "Feeling anxious", "Depression support", "Therapy sessions"
+- **OPD**: "General checkup", "Fever and cold", "Medical consultation"
+
+## Accessibility
+
+The app includes:
+
+- Semantic HTML elements
+- ARIA labels on interactive elements
+- Keyboard navigation support
+- Focus indicators
+- Sufficient color contrast ratios
+- Screen reader friendly content
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## License
+
+This is a demonstration project. Feel free to use and modify as needed.
+
+## Credits
+
+- Built with ❤️ using React and modern web technologies
+- Icons by [Lucide](https://lucide.dev)
+- AI powered by [Google Gemini](https://ai.google.dev)
+
+---
+
+**Note**: This is a frontend demonstration project. In production, API keys should be stored securely on the backend, and all AI calls should be proxied through your own server for security and rate limiting.
